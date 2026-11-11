@@ -42,11 +42,14 @@
 .sls-toast.sls-error { background: rgba(178, 34, 34, 0.92); }
 
 .sls-bar {
-  position: absolute;
+  /* ビューポート基準で固定する。プレイヤー下端からの絶対配置にすると、
+     プレイヤーの高さがビューポートを超える画面比 (このサイトのプレイヤーは
+     fluid で横幅に追従するため、横長のウィンドウで起きる) でバーが画面外に出る。
+     .ulizahtml5 の子である点は変えていないので、フルスクリーン時も表示される */
+  position: fixed;
   left: 50%;
-  /* 下部のコントロールバー (.vjs-control-bar, 高さ 48px) のすぐ上に置く。
-     重ねると既存の再生ボタンやシークバーを隠してしまう */
-  bottom: 64px;
+  /* コントロールバー (高さ 48px) が画面下端にある場合に重ならない余裕を取る */
+  bottom: 96px;
   transform: translateX(-50%);
   /* Uliza のオーバーレイ (.uliza-overlay-button-area など) が z-index 5 で
      プレイヤー全面を覆っている。その下にあるとクリックが吸われるため上に出す */

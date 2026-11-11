@@ -136,14 +136,32 @@
   document.addEventListener('keydown', onKeyDown, true);
   loadSettings();
 
-  // 想定した要素が無ければ警告する。silent に動かなくなるのを防ぐ
-  const missing = SLS.player.verifySelectors();
-  if (missing.length > 0) {
-    console.warn(
-      '[Singular Live Screenshot] 想定した要素が見つかりません。singular-live の DOM 構造が変わった可能性があります:',
-      missing
-    );
+  // 想定した要素が無ければ警告する。silent に動かなくなるのを防ぐ。
+  //
+  // ただしプレイヤーはページ読み込み後にスクリプトが生成するため、document_idle の
+  // 時点ではまだ存在しない。起動直後に検証すると必ず警告が出てしまい、本当に
+  // 構造が変わったときとの区別がつかなくなる。要素が揃うまで待ち、時間切れに
+  // なったときだけ警告する。
+  const VERIFY_TIMEOUT_MS = 15000;
+
+  function verifySelectorsWhenReady() {
+    const deadline = Date.now() + VERIFY_TIMEOUT_MS;
+    const check = () => {
+      const missing = SLS.player.verifySelectors();
+      if (missing.length === 0) return;
+      if (Date.now() >= deadline) {
+        console.warn(
+          '[Singular Live Screenshot] 想定した要素が見つかりません。singular-live の DOM 構造が変わった可能性があります:',
+          missing
+        );
+        return;
+      }
+      setTimeout(check, 500);
+    };
+    check();
   }
+
+  verifySelectorsWhenReady();
 
   console.info('[Singular Live Screenshot] content script を読み込みました', SLS.version);
 })();
