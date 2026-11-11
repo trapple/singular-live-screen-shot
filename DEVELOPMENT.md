@@ -62,6 +62,8 @@ DOM 操作・キー入力・ダウンロードは自動テストの費用対効�
 | `src/background/index.js` | `chrome.downloads` での保存 |
 | `src/shared/format.js` | タイムコード・ファイル名・fps・ホットキーの純粋関数 |
 | `assets/icon.svg` | アイコンの原本。`scripts/build-icons.sh` で PNG を生成する |
+| `docs/store-listing.md` | Chrome ウェブストアに申請するときの掲載情報の原稿 |
+| `PRIVACY.md` | プライバシーポリシー。ストア申請で URL を求められる |
 
 設計判断の記録は `docs/adr/` にある。
 

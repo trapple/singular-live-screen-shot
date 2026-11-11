@@ -92,6 +92,11 @@ SINGULAR LIVE の再生ページを開けば使える。
 
 開発手順・リリース方法・コードの構成は [DEVELOPMENT.md](DEVELOPMENT.md) を参照。
 
+## プライバシー
+
+本拡張は外部のサーバーと通信せず、いかなる情報も収集しない。詳細は
+[PRIVACY.md](PRIVACY.md) を参照。
+
 ## ライセンス
 
 MIT License. 詳細は [LICENSE](LICENSE) を参照。
