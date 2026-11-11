@@ -101,9 +101,6 @@ SINGULAR LIVE の再生ページを開けば使える。
 さらに、その中でも再生ページ以外では何もしない。トップページや番組一覧ではキー入力の
 監視すら行わない。
 
-z-an (https://www.zan-live.com) 向けの同等の拡張は
-[z-an-screen-shot](https://github.com/trapple/z-an-screen-shot) にある。
-
 ## 開発
 
 ビルドは不要。
