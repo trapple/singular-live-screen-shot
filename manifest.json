@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "Singular Live Screenshot",
+  "version": "0.1.0",
+  "description": "SINGULAR LIVE のアーカイブ動画から UI の写り込みなしにフレームを保存する",
+  "permissions": [
+    "downloads",
+    "storage"
+  ],
+  "background": {
+    "service_worker": "src/background/index.js"
+  },
+  "options_page": "src/options/options.html",
+  "content_scripts": [
+    {
+      "matches": [
+        "https://singular-live.thinkr.jp/*"
+      ],
+      "js": [
+        "src/shared/defaults.js",
+        "src/shared/format.js",
+        "src/content/player.js",
+        "src/content/ui.js",
+        "src/content/stepper.js",
+        "src/content/capture.js",
+        "src/content/index.js"
+      ],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+// 設定の読み書き。保存すると content script が chrome.storage.onChanged で
+// 拾うため、singular-live のページをリロードしなくても反映される。
+(function () {
+  'use strict';
+
+  const SLS = globalThis.SLS;
+  // OS の判定はここで一度だけ行う。format.js は純粋関数だけを持つ約束なので、
+  // navigator を読むのはブラウザでしか動かない側の責務。
+  const META_LABEL = SLS.format.metaLabelForPlatform(
+    (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform
+  );
+  // ホットキーの設定は名前が Key で終わる、という defaults.js の並びに従う。
+  // ここで再び列挙すると、ホットキーを増やしたときに直し忘れる箇所が 1 つ増える。
+  const HOTKEY_FIELDS = Object.keys(SLS.defaults).filter((key) => key.endsWith('Key'));
+  // 修飾キー単独は割り当てさせない
+  const MODIFIER_CODES = [
+    'ShiftLeft',
+    'ShiftRight',
+    'ControlLeft',
+    'ControlRight',
+    'AltLeft',
+    'AltRight',
+    'MetaLeft',
+    'MetaRight',
+  ];
+
+  let settings = Object.assign({}, SLS.defaults);
+
+  function showStatus(message, isError) {
+    const status = document.getElementById('status');
+    status.textContent = message;
+    status.classList.toggle('sls-error', Boolean(isError));
+  }
+
+  function render() {
+    for (const key of HOTKEY_FIELDS) {
+      document.getElementById(key).value = SLS.format.formatHotkey(settings[key], META_LABEL);
+    }
+    document.getElementById('downloadSubdir').value = settings.downloadSubdir;
+    document.getElementById('showButtons').checked = Boolean(settings.showButtons);
+  }
+
+  function save() {
+    chrome.storage.sync.set(settings, () => {
+      if (chrome.runtime.lastError) {
+        showStatus(`保存に失敗しました: ${chrome.runtime.lastError.message}`, true);
+        return;
+      }
+      showStatus('保存しました');
+    });
+  }
+
+  function load() {
+    chrome.storage.sync.get(SLS.defaults, (stored) => {
+      if (chrome.runtime.lastError) {
+        showStatus(`設定の読み込みに失敗しました: ${chrome.runtime.lastError.message}`, true);
+        return;
+      }
+      settings = Object.assign({}, SLS.defaults, stored);
+      render();
+    });
+  }
+
+  for (const key of HOTKEY_FIELDS) {
+    const input = document.getElementById(key);
+    input.addEventListener('keydown', (event) => {
+      event.preventDefault();
+      if (MODIFIER_CODES.includes(event.code)) return;
+      settings[key] = SLS.format.hotkeyFromEvent(event);
+      render();
+      save();
+    });
+  }
+
+  document.getElementById('downloadSubdir').addEventListener('change', (event) => {
+    settings.downloadSubdir = event.target.value.trim() || SLS.defaults.downloadSubdir;
+    render();
+    save();
+  });
+
+  document.getElementById('showButtons').addEventListener('change', (event) => {
+    settings.showButtons = event.target.checked;
+    save();
+  });
+
+  document.getElementById('reset').addEventListener('click', () => {
+    settings = Object.assign({}, SLS.defaults);
+    render();
+    save();
+  });
+
+  load();
+})();
