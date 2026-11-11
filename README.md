@@ -133,6 +133,17 @@ ZIP をローカルで作るだけなら:
 ./scripts/build-zip.sh
 ```
 
+### アイコン
+
+`assets/icon.svg` が原本。PNG を作り直すには:
+
+```bash
+./scripts/build-icons.sh
+```
+
+macOS 標準の `qlmanage` (SVG のレンダリング) と `sips` (縮小) だけで完結する。
+rsvg-convert や ImageMagick を入れる必要はない。
+
 ### テスト
 
 ```bash
@@ -153,6 +164,7 @@ DOM 操作・キー入力・ダウンロードは自動テストの費用対効�
 | `src/content/index.js` | キー待受と配線 |
 | `src/background/index.js` | `chrome.downloads` での保存 |
 | `src/shared/format.js` | タイムコード・ファイル名・fps・ホットキーの純粋関数 |
+| `assets/icon.svg` | アイコンの原本。`scripts/build-icons.sh` で PNG を生成する |
 
 設計判断の記録は `docs/adr/` にある。
 
