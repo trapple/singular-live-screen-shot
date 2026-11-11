@@ -28,7 +28,10 @@
   input[readonly]:focus { border-color: #0a84ff; background: #fff; outline: none; }
   .hint { margin: 4px 0 0; font-size: 12px; color: #8e8e93; }
   button {
-    margin-top: 20px;
+    /* 指定しないとインライン扱いになり、直前のチェックボックスのラベルと
+       同じ行に並んでしまう */
+    display: block;
+    margin-top: 24px;
     padding: 7px 14px;
     border: 1px solid #c7c7cc;
     border-radius: 6px;
